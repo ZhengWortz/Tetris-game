@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
   <title>🎤 The Tetris - Miku Edition</title>
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -14,10 +14,11 @@
 
   <!-- Container principal do jogo -->
   <div id="game-container">
-    <div>
+    <div class="game-area">
       <h1>🎤 The Tetris - Miku Edition</h1>
       <canvas id="tetris" width="240" height="400"></canvas>
     </div>
+
     <div class="side-panel">
       <div class="scoreboard">
         <div>Score: <span id="score">0</span></div>
@@ -47,6 +48,20 @@
   <!-- Container para o GIF da Miku à direita -->
   <div class="miku-container miku-right">
     <img src="assets/miku_right.gif" alt="Miku à direita" />
+  </div>
+
+  <!-- Joystick Virtual (oculto por padrão) -->
+  <div id="joystick-container" class="hidden">
+    <div class="row">
+      <button id="rotate-left-button">↶</button>
+      <button id="drop-button">⤓</button>
+      <button id="rotate-right-button">↷</button>
+    </div>
+    <div class="row">
+      <button id="left-button">←</button>
+      <button id="down-button">↓</button>
+      <button id="right-button">→</button>
+    </div>
   </div>
 
   <!-- Modal de Tutorial -->

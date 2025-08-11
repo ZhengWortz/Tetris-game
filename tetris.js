@@ -1,12 +1,10 @@
 // Canvas principal
 const canvas = document.getElementById('tetris');
 const context = canvas.getContext('2d');
-context.scale(20, 20); // Cada bloco = 20px
 
 // Canvas de preview
 const previewCanvas = document.getElementById('preview');
 const previewCtx = previewCanvas.getContext('2d');
-previewCtx.scale(10, 10);
 
 // Elementos do DOM
 const scoreElement = document.getElementById('score');
@@ -16,7 +14,6 @@ const startButton = document.getElementById('start-button');
 const volumeSlider = document.getElementById('volume-slider');
 const bgMusic = document.getElementById('bg-music');
 const gameOverModal = document.getElementById('gameover-modal');
-const restartButton = document.getElementById('restart-button');
 
 // Estado do jogo
 let isGameOver = false;
@@ -91,7 +88,6 @@ function randomPiece() {
   return matrixes[type];
 }
 
-// Inicializa próximas peças
 function initNextPieces() {
   nextPieces = [];
   for (let i = 0; i < 3; i++) {
@@ -99,14 +95,13 @@ function initNextPieces() {
   }
 }
 
-// Atualiza preview
 function updatePreview() {
   previewCtx.fillStyle = '#000';
-  previewCtx.fillRect(0, 0, 10, 15);
+  previewCtx.fillRect(0, 0, previewCanvas.width / 10, previewCanvas.height / 10);
 
   let yOffset = 1;
   nextPieces.forEach(piece => {
-    const xOffset = Math.floor((10 - piece[0].length) / 2); // Centraliza no preview (10 unidades)
+    const xOffset = Math.floor(((previewCanvas.width / 10) - piece[0].length) / 2);
 
     piece.forEach((row, y) => {
       row.forEach((value, x) => {
@@ -124,7 +119,6 @@ function updatePreview() {
   });
 }
 
-// Desenha peça com efeitos
 function drawMatrix(matrix, offset) {
   matrix.forEach((row, y) => {
     row.forEach((value, x) => {
@@ -143,12 +137,10 @@ function drawMatrix(matrix, offset) {
   });
 }
 
-// Desenha tudo
 function draw() {
   context.fillStyle = '#000';
   context.fillRect(0, 0, canvas.width, canvas.height);
 
-  // Grade (tipo xadrez)
   context.strokeStyle = '#333';
   context.lineWidth = 0.02;
   for (let y = 0; y < 20; y++) {
@@ -161,7 +153,6 @@ function draw() {
   drawMatrix(player.matrix, player.pos);
 }
 
-// Colisão
 function collide(arena, player) {
   const [m, o] = [player.matrix, player.pos];
   for (let y = 0; y < m.length; ++y) {
@@ -177,7 +168,6 @@ function collide(arena, player) {
   return false;
 }
 
-// Junta peça ao tabuleiro
 function merge(arena, player) {
   player.matrix.forEach((row, y) => {
     row.forEach((value, x) => {
@@ -188,7 +178,6 @@ function merge(arena, player) {
   });
 }
 
-// Limpa linhas
 function arenaSweep() {
   let rowCount = 0;
   outer: for (let y = arena.length - 1; y >= 0; y--) {
@@ -219,7 +208,6 @@ function arenaSweep() {
   }
 }
 
-// Queda normal
 function playerDrop() {
   player.pos.y++;
   if (collide(arena, player)) {
@@ -233,13 +221,11 @@ function playerDrop() {
   dropCounter = 0;
 }
 
-// Movimento
 function playerMove(dir) {
   player.pos.x += dir;
   if (collide(arena, player)) player.pos.x -= dir;
 }
 
-// Rotação segura
 function playerRotate(dir) {
   const pos = player.pos.x;
   let offset = 1;
@@ -268,12 +254,10 @@ function rotate(matrix, dir) {
   }
 }
 
-// Nova peça - ✅ AQUI ESTÁ O CENTRALIZAÇÃO CORRETA
 function playerReset() {
   player.matrix = nextPieces.shift();
   nextPieces.push(randomPiece());
 
-  // Centraliza a peça no grid de 12 colunas
   player.pos.y = 0;
   player.pos.x = Math.floor((12 - player.matrix[0].length) / 2);
 
@@ -284,14 +268,12 @@ function playerReset() {
   updatePreview();
 }
 
-// Atualiza placar
 function updateScore() {
   scoreElement.innerText = player.score;
   levelElement.innerText = player.level;
   linesElement.innerText = player.lines;
 }
 
-// Loop principal
 function update(time = 0) {
   if (isGameOver) return;
   const deltaTime = time - lastTime;
@@ -302,7 +284,6 @@ function update(time = 0) {
   animationId = requestAnimationFrame(update);
 }
 
-// Game Over
 function gameOver() {
   if (isGameOver) return;
   isGameOver = true;
@@ -312,7 +293,6 @@ function gameOver() {
   gameOverModal.style.display = 'flex';
 }
 
-// Inicia o jogo
 function startGame() {
   if (animationId) cancelAnimationFrame(animationId);
   isGameOver = false;
@@ -330,14 +310,31 @@ function startGame() {
   update();
 }
 
+// Redimensionamento responsivo
+function resizeCanvas() {
+  const containerWidth = window.innerWidth < 800 ? window.innerWidth * 0.9 : 240;
+  const height = containerWidth * (400 / 240);
+
+  canvas.width = 12 * 20;
+  canvas.height = 20 * 20;
+  context.scale(20, 20);
+
+  previewCanvas.width = 10 * 10;
+  previewCanvas.height = 15 * 10;
+  previewCtx.scale(10, 10);
+
+  updatePreview();
+}
+
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+
 // Eventos
 startButton.addEventListener('click', startGame);
 volumeSlider.addEventListener('input', () => {
   bgMusic.volume = volumeSlider.value;
 });
 
-// Botão de reiniciar
-restartButton.addEventListener('click', () => {
+document.getElementById('gameover-ok').addEventListener('click', () => {
   gameOverModal.style.display = 'none';
-  startGame();
 });

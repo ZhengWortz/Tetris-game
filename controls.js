@@ -14,12 +14,40 @@ window.addEventListener("click", (e) => {
 document.getElementById('gameover-ok').addEventListener('click', () => {
   document.getElementById('gameover-modal').style.display = 'none';
 });
-window.addEventListener('click', (e) => {
+window.addEventListener("click", (e) => {
   const modal = document.getElementById('gameover-modal');
   if (e.target === modal) modal.style.display = 'none';
 });
 
-// Controles
+// Função para detectar dispositivo móvel
+function isMobileDevice() {
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
+
+// Mostra o joystick se for um dispositivo móvel
+if (isMobileDevice()) {
+  document.getElementById('joystick-container').classList.remove('hidden');
+}
+
+// Controles via joystick (mobile)
+document.getElementById('left-button').addEventListener('click', () => playerMove(-1));
+document.getElementById('right-button').addEventListener('click', () => playerMove(1));
+document.getElementById('rotate-left-button').addEventListener('click', () => playerRotate(-1));
+document.getElementById('rotate-right-button').addEventListener('click', () => playerRotate(1));
+document.getElementById('drop-button').addEventListener('click', () => {
+  while (!collide(arena, player)) player.pos.y++;
+  player.pos.y--;
+  merge(arena, player);
+  playerReset();
+  arenaSweep();
+  updateScore();
+  dropCounter = 0;
+});
+document.getElementById('down-button').addEventListener('click', () => {
+  playerDrop();
+});
+
+// Controles via teclado (PC)
 document.addEventListener('keydown', event => {
   if (isGameOver) return;
   const k = event.key.toLowerCase();
@@ -31,7 +59,6 @@ document.addEventListener('keydown', event => {
   else if (k === 'q') playerRotate(-1);
   else if (event.code === 'Space') {
     event.preventDefault();
-    // Queda instantânea segura
     while (!collide(arena, player)) player.pos.y++;
     player.pos.y--;
     merge(arena, player);
