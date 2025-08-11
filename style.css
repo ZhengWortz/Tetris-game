@@ -1,6 +1,8 @@
 /* Reset básico */
 * {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {
@@ -8,9 +10,9 @@ body {
   background: linear-gradient(90deg, #74ebd5 0%, #ACB6E5 100%);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   display: flex;
-  justify-content: center;     /* Centraliza horizontalmente */
-  align-items: center;         /* Centraliza verticalmente */
-  height: 100vh;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
   color: #fff;
   user-select: none;
   position: relative;
@@ -29,74 +31,33 @@ body {
   gap: 30px;
   box-shadow: 0 0 15px #00f0ffaa;
   position: relative;
-  z-index: 1;
-
-  /* ✅ Centralizado com o título */
-  max-width: 800px;           /* Limita largura para não esticar demais */
-  margin: 0 auto;             /* Centraliza no flex do body */
+  z-index: 10;
+  max-width: 800px;
+  margin: 20px auto;
 }
 
-/* === GIFs da Miku (esquerda e direita) === */
-.miku-container {
-  position: absolute;
-  width: 300px; /* Largura do container */
-  height: 900px; /* Altura do container */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000; /* Muito à frente */
-  pointer-events: none; /* Pra não atrapalhar cliques no jogo */
-  background-color: transparent; /* Faz o container ser invisível */
+/* Título do jogo */
+#game-container h1 {
+  width: 100%;
+  text-align: center;
+  margin: 0 0 20px 0;
+  font-weight: 900;
+  font-size: 1.4rem;
+  text-shadow: 0 0 6px #00f0ff;
+  user-select: none;
 }
 
-/* Posiciona Miku esquerda (ajuste left e top conforme a seta vermelha) */
-.miku-left {
-  left: 100px;   /* Ajuste horizontal: mova para esquerda/direita */
-  top: 50%;     /* Centraliza verticalmente */
-  transform: translateY(-50%);
-}
-
-/* Posiciona Miku direita (ajuste right e top) */
-.miku-right {
-  right: 150px;  /* Ajuste horizontal: mova para esquerda/direita */
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-/* === Estilo individual para cada GIF === */
-
-/* Estilo da Miku da esquerda */
-.miku-left img {
-  width: 800px;           /* Tamanho atual da Miku esquerda */
-  border-radius: 12px;    /* Bordas arredondadas */
-  animation: float 3s ease-in-out infinite; /* Animação de flutuação */
-}
-
-/* Estilo da Miku da direita (pode ser diferente!) */
-.miku-right img {
-  width: 800px;           /* Aumentei só a da direita! */
-  border-radius: 12px;    /* Mantém o estilo */
-  animation: float 3s ease-in-out infinite; /* Mesma animação */
-}
-
-/* Dica: se quiser, pode mudar a animação só da direita depois */
-
-/* Animação suave de "flutuação" */
-@keyframes float {
-  0% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
-  100% { transform: translateY(0); }
-}
-
-/* === Restante do estilo do jogo (mantido) === */
-
-canvas {
+/* Canvas principal */
+#tetris {
   background-color: #000;
   image-rendering: pixelated;
   border-radius: 8px;
   box-shadow: 0 0 10px #00f0ff;
+  display: block;
+  margin: 0 auto;
 }
 
+/* === Painel lateral (score, preview, botões) === */
 .side-panel {
   display: flex;
   flex-direction: column;
@@ -105,6 +66,7 @@ canvas {
   gap: 20px;
 }
 
+/* Placar */
 .scoreboard {
   width: 100%;
   font-weight: 700;
@@ -113,6 +75,11 @@ canvas {
   flex-direction: column;
   gap: 8px;
   text-align: center;
+}
+
+.scoreboard div {
+  display: flex;
+  justify-content: space-between;
 }
 
 /* Preview das próximas peças */
@@ -143,6 +110,7 @@ canvas {
   text-shadow: 0 0 4px #00f0ff;
 }
 
+/* Botões */
 button {
   background-color: #00f0ff;
   color: #000;
@@ -161,55 +129,113 @@ button:hover {
   background-color: #00c0cc;
 }
 
-#volume-slider {
-  width: 100%;
-  accent-color: #00f0ff;
-  height: 6px;
-  border-radius: 3px;
-  background: #2a2a40;
-}
-
-h1 {
+/* === Controle de volume === */
+.audio-controls {
   width: 100%;
   text-align: center;
-  margin: 0 0 20px 0;
-  font-weight: 900;
-  text-shadow: 0 0 6px #00f0ff;
-  user-select: none;
 }
 
-/* Modais */
+#volume-control {
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 1.1rem;
+}
+
+#volume-icon {
+  font-size: 1.2rem;
+}
+
+#volume-slider {
+  width: 100%;
+  accent-color: #a2d4d8;
+  height: 10px;
+  border-radius: 3px;
+  background: #2a2a40;
+  margin-top: 4px;
+}
+
+/* === GIFs da Miku (esquerda e direita) === */
+.miku-container {
+  position: absolute;
+  width: 300px;
+  height: 900px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  pointer-events: none; /* Não interfere nos cliques */
+  background-color: transparent;
+}
+
+/* Miku à esquerda */
+.miku-left {
+  left: 100px;    /* Ajuste fino conforme necessário */
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Miku à direita */
+.miku-right {
+  right: 200px;  /* Ajuste fino conforme necessário */
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Imagens das Mikus */
+.miku-left img,
+.miku-right img {
+  width: 800px;
+  border-radius: 12px;
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Animação de flutuação suave */
+@keyframes float {
+  0% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-12px) scale(1.03); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+/* === Modais (Tutorial e Game Over) === */
 .modal {
   display: none;
   position: fixed;
   z-index: 999;
-  left: 0; top: 0;
-  width: 100%; height: 100%;
-  background: rgba(0, 0, 0, 0.75);
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
   justify-content: center;
   align-items: center;
 }
 
 .modal-content {
   background: #1e1e2f;
-  padding: 20px 30px;
+  padding: 25px 30px;
   border: 2px solid #00f0ff;
   border-radius: 12px;
-  text-align: left;
+  text-align: center;
   max-width: 400px;
   color: #fff;
-  box-shadow: 0 0 10px #00f0ff;
+  box-shadow: 0 0 15px #00f0ff;
+  animation: fadeIn 0.4s ease-out;
 }
 
+/* Estilo do modal de Game Over */
 #gameover-modal .gameover-content {
   background: linear-gradient(135deg, #ff416c, #ff4b2b);
   border: 2px solid #fff;
   color: #fff;
-  text-align: center;
   padding: 40px 30px;
   border-radius: 16px;
-  max-width: 320px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  text-align: center;
   animation: popIn 0.4s ease-out;
 }
 
@@ -239,7 +265,34 @@ h1 {
   transform: scale(1.05);
 }
 
+/* Animações */
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
 @keyframes popIn {
   0% { transform: scale(0.7); opacity: 0; }
   100% { transform: scale(1); opacity: 1; }
+}
+
+/* Responsividade básica */
+@media (max-width: 800px) {
+  #game-container {
+    flex-direction: column;
+    padding: 20px;
+    gap: 20px;
+  }
+
+  .miku-left, .miku-right {
+    display: none; /* Esconde Mikus em telas pequenas */
+  }
+
+  .side-panel {
+    width: 100%;
+  }
+
+  #game-container h1 {
+    font-size: 1.2rem;
+  }
 }

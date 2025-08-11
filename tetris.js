@@ -1,7 +1,7 @@
 // Canvas principal
 const canvas = document.getElementById('tetris');
 const context = canvas.getContext('2d');
-context.scale(20, 20);
+context.scale(20, 20); // Cada bloco = 20px
 
 // Canvas de preview
 const previewCanvas = document.getElementById('preview');
@@ -15,6 +15,8 @@ const linesElement = document.getElementById('lines');
 const startButton = document.getElementById('start-button');
 const volumeSlider = document.getElementById('volume-slider');
 const bgMusic = document.getElementById('bg-music');
+const gameOverModal = document.getElementById('gameover-modal');
+const restartButton = document.getElementById('restart-button');
 
 // Estado do jogo
 let isGameOver = false;
@@ -102,9 +104,9 @@ function updatePreview() {
   previewCtx.fillStyle = '#000';
   previewCtx.fillRect(0, 0, 10, 15);
 
-  let yOffset = 1; // Adiciona 1 pixel de espaço vertical
+  let yOffset = 1;
   nextPieces.forEach(piece => {
-    const xOffset = Math.floor((11 - piece[0].length) / 2); // Centraliza horizontalmente
+    const xOffset = Math.floor((10 - piece[0].length) / 2); // Centraliza no preview (10 unidades)
 
     piece.forEach((row, y) => {
       row.forEach((value, x) => {
@@ -118,7 +120,7 @@ function updatePreview() {
       });
     });
 
-    yOffset += 5; // Espaço entre peças
+    yOffset += 5;
   });
 }
 
@@ -202,21 +204,18 @@ function arenaSweep() {
   }
 
   if (rowCount > 0) {
-    // Ganha 200 pontos por linha limpa
     const pointsEarned = rowCount * 200;
     player.score += pointsEarned;
     updateScore();
 
-    // Aumenta nível a cada 1000 pontos
     const newLevel = Math.floor(player.score / 1000);
     if (newLevel > player.level) {
       player.level = newLevel;
       updateScore();
     }
 
-    // Aumenta a velocidade a cada 2000 pontos (reduz intervalo em 0.5s)
     const speedStages = Math.floor(player.score / 2000);
-    dropInterval = Math.max(100, 1000 - (speedStages * 500)); // mínimo de 100ms (~10 peças/seg)
+    dropInterval = Math.max(100, 1000 - (speedStages * 500));
   }
 }
 
@@ -269,13 +268,19 @@ function rotate(matrix, dir) {
   }
 }
 
-// Nova peça
+// Nova peça - ✅ AQUI ESTÁ O CENTRALIZAÇÃO CORRETA
 function playerReset() {
   player.matrix = nextPieces.shift();
   nextPieces.push(randomPiece());
+
+  // Centraliza a peça no grid de 12 colunas
   player.pos.y = 0;
   player.pos.x = Math.floor((12 - player.matrix[0].length) / 2);
-  if (collide(arena, player)) gameOver();
+
+  if (collide(arena, player)) {
+    gameOver();
+  }
+
   updatePreview();
 }
 
@@ -304,7 +309,7 @@ function gameOver() {
   if (animationId) cancelAnimationFrame(animationId);
   bgMusic.pause();
   document.getElementById('final-score').innerText = player.score;
-  document.getElementById('gameover-modal').style.display = 'flex';
+  gameOverModal.style.display = 'flex';
 }
 
 // Inicia o jogo
@@ -329,4 +334,10 @@ function startGame() {
 startButton.addEventListener('click', startGame);
 volumeSlider.addEventListener('input', () => {
   bgMusic.volume = volumeSlider.value;
+});
+
+// Botão de reiniciar
+restartButton.addEventListener('click', () => {
+  gameOverModal.style.display = 'none';
+  startGame();
 });
