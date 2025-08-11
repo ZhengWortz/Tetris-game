@@ -279,7 +279,7 @@ button:hover {
 #joystick-container {
   position: absolute;
   bottom: 375px; /* Posiciona perto da base do canvas */
-  left: 600px;   /* Posiciona ao lado do canvas */
+  left: 575px;   /* Posiciona ao lado do canvas */
   display: flex;
   flex-direction: column;
   align-items: center;
