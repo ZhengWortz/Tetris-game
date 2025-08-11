@@ -39,7 +39,7 @@ Disponível apenas para usuários de computadores.
 
 🌐 Deploy
 O jogo está disponível online através da Vercel:
-[**🎮 Jogar Tetris Miku Edition**](tetris-game-blond.vercel.app)
+[**🎮 Jogar Tetris Miku Edition**](https://tetris-game-blond.vercel.app/)
 
 
 
