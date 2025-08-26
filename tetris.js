@@ -293,6 +293,24 @@ function gameOver() {
   gameOverModal.style.display = 'flex';
 }
 
+function restartGame() {
+  if (animationId) cancelAnimationFrame(animationId);
+  isGameOver = false;
+  arena.forEach(row => row.fill(0));
+  player.score = 0;
+  player.lines = 0;
+  player.level = 0;
+  dropInterval = 1000;
+  initNextPieces();
+  updateScore();
+  playerReset();
+  updatePreview();
+  bgMusic.currentTime = 0;
+  bgMusic.play().catch(() => {});
+  update();
+  gameOverModal.style.display = 'none';
+}
+
 function startGame() {
   if (animationId) cancelAnimationFrame(animationId);
   isGameOver = false;
@@ -333,8 +351,4 @@ resizeCanvas();
 startButton.addEventListener('click', startGame);
 volumeSlider.addEventListener('input', () => {
   bgMusic.volume = volumeSlider.value;
-});
-
-document.getElementById('gameover-ok').addEventListener('click', () => {
-  gameOverModal.style.display = 'none';
 });

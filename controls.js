@@ -11,12 +11,13 @@ window.addEventListener("click", (e) => {
 });
 
 // Game Over
-document.getElementById('gameover-ok').addEventListener('click', () => {
-  document.getElementById('gameover-modal').style.display = 'none';
+document.getElementById('gameover-restart').addEventListener('click', () => {
+  restartGame();
 });
-window.addEventListener("click", (e) => {
-  const modal = document.getElementById('gameover-modal');
-  if (e.target === modal) modal.style.display = 'none';
+
+document.getElementById('gameover-reset').addEventListener('click', () => {
+  // Reinicia completamente o jogo (como se tivesse entrado pela primeira vez)
+  window.location.reload();
 });
 
 // Função para detectar dispositivo móvel

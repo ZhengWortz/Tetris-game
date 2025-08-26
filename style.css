@@ -258,6 +258,8 @@ button:hover {
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s;
+  margin: 5px 0;
+  width: 100%;
 }
 
 #gameover-modal .gameover-content button:hover {
