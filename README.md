@@ -6,7 +6,7 @@
 
 Um jogo Tetris customizado com tema da **Hatsune Miku**, desenvolvido com **HTML, CSS e JavaScript puro**.  
 Sem frameworks — apenas código limpo e otimizado para diversão!
-Disponível apenas para usuários de computadores.
+Responsivo: funciona em notebooks, monitores Full HD/2K/4K, tablets e celulares (com joystick de toque).
 
 ---
 
@@ -23,6 +23,8 @@ Disponível apenas para usuários de computadores.
   - **A / D** → Mover para esquerda/direita
   - **S** → Descer rápido
   - **Space** → Queda instantânea
+  - **P / Esc** → Pausar · **M** → Mudo
+- Sombra de onde a peça vai cair, sistema de 7 peças (sem sequências injustas), pontuação por nível e **recorde salvo**
 - Botão de **tutorial interativo**
 - Design inspirado no estilo **Hatsune Miku**
 
